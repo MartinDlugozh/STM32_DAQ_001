@@ -145,14 +145,18 @@ void daq_gui_draw_set_table_v2(void){
   daq_qui_write_line_normal((SETV2_NUM_PARAMETERS+1), DISP_SET_TABLE_X);
 }
 
-void daq_qui_println_param_float(uint8_t line, uint16_t x_offset, param_status_t status, uint16_t val_int, uint16_t val_frac){
+void daq_qui_println_param_float(uint8_t line, uint16_t x_offset, param_status_t status, uint16_t val_int, uint16_t val_frac, uint8_t dop){
   uint16_t color = ST7735_GREEN;
   if(status == STATUS_CHANGED){
     color = ST7735_RED;
   }
   memset(spi_tx_buffer, 0x00, SPI_TX_BUFFER_LEN);
   spi_tx_len_previous[line] = spi_tx_len_next[line];
-  spi_tx_len_next[line] = sprintf((char*)spi_tx_buffer, "%d.%02d", val_int, val_frac);
+  if(dop == 10){
+    spi_tx_len_next[line] = sprintf((char*)spi_tx_buffer, "%d.%02d", val_int, val_frac);
+  }else{
+    spi_tx_len_next[line] = sprintf((char*)spi_tx_buffer, "%d.%d", val_int, val_frac);
+  }
   if(spi_tx_len_next[line] < spi_tx_len_previous[line]){
     strncat((char*)spi_tx_buffer, (char*)space, (spi_tx_len_previous[line] - spi_tx_len_next[line]));
   }
@@ -198,19 +202,19 @@ void daq_qui_view_main(uint8_t gui_change_view){
   //line 1 - TR
   val_dec = t.inCelsus;
   val_frac = t.frac;
-  daq_qui_println_param_float(1, DISP_VALUE_X, STATUS_UNCHANGED, val_dec, val_frac);
+  daq_qui_println_param_float(1, DISP_VALUE_X, STATUS_UNCHANGED, val_dec, val_frac, 1);
 
   //line 2 - TA
   split_float(temperature_1, &val_dec, &val_frac, 1);
-  daq_qui_println_param_float(2, DISP_VALUE_X, STATUS_UNCHANGED, val_dec, val_frac);
+  daq_qui_println_param_float(2, DISP_VALUE_X, STATUS_UNCHANGED, val_dec, val_frac, 1);
 
   // line 3 - TB
   split_float(temperature_2, &val_dec, &val_frac, 1);
-  daq_qui_println_param_float(3, DISP_VALUE_X, STATUS_UNCHANGED, val_dec, val_frac);
+  daq_qui_println_param_float(3, DISP_VALUE_X, STATUS_UNCHANGED, val_dec, val_frac, 1);
 
   // line 4 - FW
   split_float(flow_rate, &val_dec, &val_frac, 1);
-  daq_qui_println_param_float(4, DISP_VALUE_X, STATUS_UNCHANGED, val_dec, val_frac);
+  daq_qui_println_param_float(4, DISP_VALUE_X, STATUS_UNCHANGED, val_dec, val_frac, 1);
 }
 
 void daq_gui_view_raw_data(uint8_t gui_change_view){
@@ -226,7 +230,7 @@ void daq_gui_view_raw_data(uint8_t gui_change_view){
   //line 1 - TR
   val_dec = t.inCelsus;
   val_frac = t.frac;
-  daq_qui_println_param_float(1, DISP_VALUE_X, STATUS_UNCHANGED, val_dec, val_frac);
+  daq_qui_println_param_float(1, DISP_VALUE_X, STATUS_UNCHANGED, val_dec, val_frac, 1);
   //line 2 - TA
   daq_qui_println_param_dec(2, DISP_VALUE_X, (uint16_t)adc_dma_buffer[0]);
   // line 3 - TB
@@ -242,13 +246,13 @@ void daq_gui_view_settings(uint8_t gui_change_view){
   }
   
   // line 0 - K_TA
-  daq_qui_println_param_float(0, DISP_SET_VALUE_X, daq_setings_get_param_status(ID_K_T1), daq_setings_get_param_int(ID_K_T1), daq_setings_get_param_frac(ID_K_T1));
+  daq_qui_println_param_float(0, DISP_SET_VALUE_X, daq_setings_get_param_status(ID_K_T1), daq_setings_get_param_int(ID_K_T1), daq_setings_get_param_frac(ID_K_T1), 10);
   //line 1 - K_TB
-  daq_qui_println_param_float(1, DISP_SET_VALUE_X, daq_setings_get_param_status(ID_K_T2), daq_setings_get_param_int(ID_K_T2), daq_setings_get_param_frac(ID_K_T2));
+  daq_qui_println_param_float(1, DISP_SET_VALUE_X, daq_setings_get_param_status(ID_K_T2), daq_setings_get_param_int(ID_K_T2), daq_setings_get_param_frac(ID_K_T2), 10);
   //line 2 - K_F
-  daq_qui_println_param_float(2, DISP_SET_VALUE_X, daq_setings_get_param_status(ID_K_F), daq_setings_get_param_int(ID_K_F), daq_setings_get_param_frac(ID_K_F));
+  daq_qui_println_param_float(2, DISP_SET_VALUE_X, daq_setings_get_param_status(ID_K_F), daq_setings_get_param_int(ID_K_F), daq_setings_get_param_frac(ID_K_F), 10);
   // line 3 - K_D
-  daq_qui_println_param_float(3, DISP_SET_VALUE_X, daq_setings_get_param_status(ID_DUMMY), daq_setings_get_param_int(ID_DUMMY), daq_setings_get_param_frac(ID_DUMMY));
+  daq_qui_println_param_float(3, DISP_SET_VALUE_X, daq_setings_get_param_status(ID_DUMMY), daq_setings_get_param_int(ID_DUMMY), daq_setings_get_param_frac(ID_DUMMY), 10);
 }
 
 void daq_gui_view_settings_v2(uint8_t gui_change_view){
@@ -257,7 +261,7 @@ void daq_gui_view_settings_v2(uint8_t gui_change_view){
   }
   
   for (uint8_t i = 0; i < SETV2_NUM_PARAMETERS; i++){
-    daq_qui_println_param_float(i, DISP_SET_VALUE_X, daq_setV2_get_param_status(i), daq_setV2_get_param_int(i), daq_setV2_get_param_frac(i));
+    daq_qui_println_param_float(i, DISP_SET_VALUE_X, daq_setV2_get_param_status(i), daq_setV2_get_param_int(i), daq_setV2_get_param_frac(i), 10);
   }
 }
 

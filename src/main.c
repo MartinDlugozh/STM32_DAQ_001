@@ -493,7 +493,7 @@ static void MX_ADC1_Init(void)
     Error_Handler();
   }
 
-  /** Configure Regular Channel
+  /** Configure Regular Channel 0
   */
   sConfig.Channel = ADC_CHANNEL_0;
   sConfig.Rank = ADC_REGULAR_RANK_1;
@@ -503,7 +503,7 @@ static void MX_ADC1_Init(void)
     Error_Handler();
   }
 
-  /** Configure Regular Channel
+  /** Configure Regular Channel 1
   */
   sConfig.Channel = ADC_CHANNEL_1;
   sConfig.Rank = ADC_REGULAR_RANK_2;

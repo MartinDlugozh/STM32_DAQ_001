@@ -78,7 +78,7 @@ void daq_gui_view_settings(uint8_t gui_change_view);
 void daq_qui_write_line_normal(uint8_t line, uint16_t x_offset);
 void daq_qui_draw_val_table(void);
 void daq_qui_draw_set_table(void);
-void daq_qui_println_param_float(uint8_t line, uint16_t x_offset, param_status_t status, uint16_t val_int, uint16_t val_frac);
+void daq_qui_println_param_float(uint8_t line, uint16_t x_offset, param_status_t status, uint16_t val_int, uint16_t val_frac, uint8_t dop);
 void daq_qui_println_param_dec(uint8_t line, uint16_t x_offset, uint16_t val);
 void daq_qui_println_param_long(uint8_t line, uint16_t x_offset, uint32_t val);
 

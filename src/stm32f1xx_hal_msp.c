@@ -15,9 +15,8 @@
   *
   ******************************************************************************
   */
-
-/* Includes ------------------------------------------------------------------*/
-#include "main.h"
+ 
+ #include "main.h"
 
 extern DMA_HandleTypeDef hdma_spi1_tx;
 
@@ -26,9 +25,6 @@ extern DMA_HandleTypeDef hdma_spi1_tx;
 
 extern DMA_HandleTypeDef hdma_adc1;
 
-/**
-  * Initializes the Global MSP.
-  */
 void HAL_MspInit(void)
 {
   __HAL_RCC_AFIO_CLK_ENABLE();
@@ -80,12 +76,6 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
 
 }
 
-/**
-* @brief ADC MSP De-Initialization
-* This function freeze the hardware resources used in this example
-* @param hadc: ADC handle pointer
-* @retval None
-*/
 void HAL_ADC_MspDeInit(ADC_HandleTypeDef* hadc)
 {
   if(hadc->Instance==ADC1)
@@ -105,12 +95,6 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* hadc)
 
 }
 
-/**
-* @brief SPI MSP Initialization
-* This function configures the hardware resources used in this example
-* @param hspi: SPI handle pointer
-* @retval None
-*/
 void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
@@ -151,12 +135,6 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi)
   }
 }
 
-/**
-* @brief SPI MSP De-Initialization
-* This function freeze the hardware resources used in this example
-* @param hspi: SPI handle pointer
-* @retval None
-*/
 void HAL_SPI_MspDeInit(SPI_HandleTypeDef* hspi)
 {
   if(hspi->Instance==SPI1)
@@ -222,12 +200,6 @@ void HAL_TIM_Encoder_MspDeInit(TIM_HandleTypeDef* htim_encoder)
 
 }
 
-/**
-* @brief TIM_Base MSP Initialization
-* This function configures the hardware resources used in this example
-* @param htim_base: TIM_Base handle pointer
-* @retval None
-*/
 void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
 {
   if(htim_base->Instance==TIM4)
@@ -241,12 +213,6 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
 
 }
 
-/**
-* @brief TIM_Base MSP De-Initialization
-* This function freeze the hardware resources used in this example
-* @param htim_base: TIM_Base handle pointer
-* @retval None
-*/
 void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base)
 {
   if(htim_base->Instance==TIM4)
