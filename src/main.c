@@ -33,32 +33,13 @@
   ******************************************************************************
   */
 
-#include <stdio.h>
-#include <string.h>
-
 #include "main.h"
-#include "cmsis_os.h"
-#include "task.h"
 
 #include "usb_device.h"
 #include "usbd_cdc_if.h"
 
-#include "stm32f1xx_hal.h"
-#include "stm32f1xx_hal_exti.h"
-#include "stm32f1xx_hal_uart.h"
-#include "stm32f1xx_hal_flash.h"
-
-// #include "ssd1306_conf.h"
-// #include "ssd1306_fonts.h"
-// #include "ssd1306.h"
-
-#include "ST7735.h"
-#include "fonts.h"
-#include "encoder.h"
-#include "daq_settings.h"
-#include "daq_gui.h"
-
-#include "OneWire.h"
+typedef StaticTask_t osStaticThreadDef_t;
+typedef StaticSemaphore_t osStaticSemaphoreDef_t;
 
 // #define I2C_MAX_ADDRESS 127     // max address value for 12c scanner
 // #define I2C_MAX_DEVICES 5       // max amount of registered i2c devices
@@ -99,32 +80,53 @@ TIM_HandleTypeDef   htim4;          // Timer to triggrt ADC conversion
 
 // OS task attributes
 osThreadId_t osTaskHeartbeat_handle;
+uint32_t heartbeatTaskBuffer[128];
+osStaticThreadDef_t heartbeatTaskControlBlock;
 const osThreadAttr_t osTaskHeartbeat_attributes = {
   .name = "hb",
-  .stack_size = 128 * 4,
+  .cb_mem = &heartbeatTaskControlBlock,
+  .cb_size = sizeof(heartbeatTaskControlBlock),
+  .stack_mem = &heartbeatTaskBuffer[0],
+  .stack_size = sizeof(heartbeatTaskBuffer),
   .priority = (osPriority_t) (configMAX_PRIORITIES-2),
 };
 
 osThreadId_t osTaskSensorPoll_handle;
+uint32_t sensorPollTaskBuffer[265];
+osStaticThreadDef_t sensorPollTaskControlBlock;
 const osThreadAttr_t osTaskSensorPoll_attributes = {
   .name = "sen",
-  .stack_size = 128 * 4,
+  .cb_mem = &sensorPollTaskControlBlock,
+  .cb_size = sizeof(sensorPollTaskControlBlock),
+  .stack_mem = &sensorPollTaskBuffer[0],
+  .stack_size = sizeof(sensorPollTaskBuffer),
   .priority = (osPriority_t) (configMAX_PRIORITIES-3),
 };
 
 osThreadId_t osTaskUSB_handle;
+uint32_t usbTaskBuffer[256];
+osStaticThreadDef_t usbTaskControlBlock;
 const osThreadAttr_t osTaskUSB_attributes = {
   .name = "usb",
-  .stack_size = 128 * 4,
+  .cb_mem = &usbTaskControlBlock,
+  .cb_size = sizeof(usbTaskControlBlock),
+  .stack_mem = &usbTaskBuffer[0],
+  .stack_size = sizeof(usbTaskBuffer),
   .priority = (osPriority_t) (configMAX_PRIORITIES-1),
 };
 
 osThreadId_t osTaskDisplay_handle;
+uint32_t displayTaskBuffer[265];
+osStaticThreadDef_t displayTaskControlBlock;
 const osThreadAttr_t osTaskDisplay_attributes = {
   .name = "disp",
-  .stack_size = 128 * 4,
+  .cb_mem = &displayTaskControlBlock,
+  .cb_size = sizeof(displayTaskControlBlock),
+  .stack_mem = &displayTaskBuffer[0],
+  .stack_size = sizeof(displayTaskBuffer),
   .priority = (osPriority_t) (configMAX_PRIORITIES-4),
 };
+
 
 // SYS config
 static void SystemClock_Config(void);

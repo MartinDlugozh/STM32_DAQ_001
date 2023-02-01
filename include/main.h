@@ -57,7 +57,32 @@ extern "C" {
 #define BUZZER_STARTUP 0
 #define BUZZER_DURATION 100
 
+#include <stdio.h>
+#include <string.h>
+
 #include "stm32f1xx_hal.h"
+
+#include "cmsis_os.h"
+#include "task.h"
+
+
+
+#include "stm32f1xx_hal.h"
+#include "stm32f1xx_hal_exti.h"
+#include "stm32f1xx_hal_uart.h"
+#include "stm32f1xx_hal_flash.h"
+
+// #include "ssd1306_conf.h"
+// #include "ssd1306_fonts.h"
+// #include "ssd1306.h"
+
+#include "ST7735.h"
+#include "fonts.h"
+#include "encoder.h"
+#include "daq_settings.h"
+#include "daq_gui.h"
+
+#include "OneWire.h"
 
 void Error_Handler(void);
 void split_float(float val_float, uint16_t *val_int, uint16_t *val_fract, uint8_t dop);

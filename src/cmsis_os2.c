@@ -401,9 +401,11 @@ osThreadId_t osThreadNew (osThreadFunc_t func, void *argument, const osThreadAtt
     }
     else {
       if (mem == 0) {
+#if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
         if (xTaskCreate ((TaskFunction_t)func, name, (uint16_t)stack, argument, prio, &hTask) != pdPASS) {
           hTask = NULL;
         }
+#endif
       }
     }
   }
@@ -883,7 +885,9 @@ osTimerId_t osTimerNew (osTimerFunc_t func, osTimerType_t type, void *argument, 
       }
       else {
         if (mem == 0) {
+#if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
           hTimer = xTimerCreate (name, 1, reload, callb, TimerCallback);
+#endif
         }
       }
     }
@@ -1024,7 +1028,9 @@ osEventFlagsId_t osEventFlagsNew (const osEventFlagsAttr_t *attr) {
     }
     else {
       if (mem == 0) {
+#if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
         hEventGroup = xEventGroupCreate();
+#endif
       }
     }
   }
@@ -1220,11 +1226,13 @@ osMutexId_t osMutexNew (const osMutexAttr_t *attr) {
       }
       else {
         if (mem == 0) {
+#if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
           if (rmtx != 0U) {
             hMutex = xSemaphoreCreateRecursiveMutex ();
           } else {
             hMutex = xSemaphoreCreateMutex ();
           }
+#endif
         }
       }
 
@@ -1367,7 +1375,7 @@ osStatus_t osMutexDelete (osMutexId_t mutex_id) {
 /*---------------------------------------------------------------------------*/
 
 osSemaphoreId_t osSemaphoreNew (uint32_t max_count, uint32_t initial_count, const osSemaphoreAttr_t *attr) {
-  SemaphoreHandle_t hSemaphore;
+  volatile SemaphoreHandle_t hSemaphore;
   int32_t mem;
   #if (configQUEUE_REGISTRY_SIZE > 0)
   const char *name;
@@ -1398,7 +1406,9 @@ osSemaphoreId_t osSemaphoreNew (uint32_t max_count, uint32_t initial_count, cons
           hSemaphore = xSemaphoreCreateBinaryStatic ((StaticSemaphore_t *)attr->cb_mem);
         }
         else {
+#if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
           hSemaphore = xSemaphoreCreateBinary();
+#endif
         }
 
         if ((hSemaphore != NULL) && (initial_count != 0U)) {
@@ -1413,7 +1423,9 @@ osSemaphoreId_t osSemaphoreNew (uint32_t max_count, uint32_t initial_count, cons
           hSemaphore = xSemaphoreCreateCountingStatic (max_count, initial_count, (StaticSemaphore_t *)attr->cb_mem);
         }
         else {
+#if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
           hSemaphore = xSemaphoreCreateCounting (max_count, initial_count);
+#endif
         }
       }
 
@@ -1575,7 +1587,9 @@ osMessageQueueId_t osMessageQueueNew (uint32_t msg_count, uint32_t msg_size, con
     }
     else {
       if (mem == 0) {
+#if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
         hQueue = xQueueCreate (msg_count, msg_size);
+#endif
       }
     }
 

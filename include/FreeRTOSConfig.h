@@ -54,14 +54,14 @@
 #endif
 #define configUSE_PREEMPTION                     1
 #define configSUPPORT_STATIC_ALLOCATION          1
-#define configSUPPORT_DYNAMIC_ALLOCATION         1
+#define configSUPPORT_DYNAMIC_ALLOCATION         0
 #define configUSE_IDLE_HOOK                      1
 #define configUSE_TICK_HOOK                      0
 #define configCPU_CLOCK_HZ                       ( SystemCoreClock )
 #define configTICK_RATE_HZ                       ((TickType_t)1000)
 #define configMAX_PRIORITIES                     ( 5 )   // 56
 #define configMINIMAL_STACK_SIZE                 ((uint16_t)128)
-#define configTOTAL_HEAP_SIZE                    ((size_t)3076)     //4096  3076
+// #define configTOTAL_HEAP_SIZE                    ((size_t)3076)     //4096  3076
 #define configMAX_TASK_NAME_LEN                  ( 8 )
 #define configUSE_TRACE_FACILITY                 1
 #define configUSE_16_BIT_TICKS                   0
@@ -101,7 +101,7 @@ to exclude the API function. */
  * The CMSIS-RTOS V2 FreeRTOS wrapper is dependent on the heap implementation used
  * by the application thus the correct define need to be enabled below
  */
-#define USE_FreeRTOS_HEAP_2
+// #define USE_FreeRTOS_HEAP_2
 
 /* Cortex-M specific definitions. */
 #ifdef __NVIC_PRIO_BITS
