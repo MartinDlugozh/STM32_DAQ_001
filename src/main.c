@@ -92,7 +92,7 @@ const osThreadAttr_t osTaskHeartbeat_attributes = {
 };
 
 osThreadId_t osTaskSensorPoll_handle;
-uint32_t sensorPollTaskBuffer[265];
+uint32_t sensorPollTaskBuffer[160];
 osStaticThreadDef_t sensorPollTaskControlBlock;
 const osThreadAttr_t osTaskSensorPoll_attributes = {
   .name = "sen",
@@ -104,7 +104,7 @@ const osThreadAttr_t osTaskSensorPoll_attributes = {
 };
 
 osThreadId_t osTaskUSB_handle;
-uint32_t usbTaskBuffer[256];
+uint32_t usbTaskBuffer[160];
 osStaticThreadDef_t usbTaskControlBlock;
 const osThreadAttr_t osTaskUSB_attributes = {
   .name = "usb",
@@ -116,7 +116,7 @@ const osThreadAttr_t osTaskUSB_attributes = {
 };
 
 osThreadId_t osTaskDisplay_handle;
-uint32_t displayTaskBuffer[265];
+uint32_t displayTaskBuffer[160];
 osStaticThreadDef_t displayTaskControlBlock;
 const osThreadAttr_t osTaskDisplay_attributes = {
   .name = "disp",
@@ -251,8 +251,9 @@ void osTaskUSB(void *argument){
   volatile uint32_t osTaskPreviousWoken = 0;
 
   uint8_t cdc_tx_len = 0;
-//uint8_t stack_high_wm = uxTaskGetStackHighWaterMark(NULL);
-//uint8_t test_stack = 1;
+  // volatile UBaseType_t uxHighWaterMark;
+  // uxHighWaterMark = uxTaskGetStackHighWaterMark(NULL);
+  // (void)uxHighWaterMark;
 
   for(;;){
     osTaskPreviousWoken = osKernelGetTickCount();
@@ -272,16 +273,17 @@ void osTaskUSB(void *argument){
     CDC_Transmit_FS(UserTxBufferFS, cdc_tx_len);
 
     osDelayUntil(osTaskPreviousWoken + 100); // 10Hz (test) 
-    // osDelay(100);
 
-    // if(test_stack==1){
-    //   stack_high_wm -= uxTaskGetStackHighWaterMark(NULL);
-    //   test_stack = 0;
-    // }
+    // uxHighWaterMark = uxTaskGetStackHighWaterMark(NULL);
+    // (void)uxHighWaterMark;
   }
 }
 
 void osTaskDisplay(void *argument){
+  // volatile UBaseType_t uxHighWaterMark;
+  // uxHighWaterMark = uxTaskGetStackHighWaterMark(NULL);
+  // (void)uxHighWaterMark;
+
   volatile uint32_t osTaskPreviousWoken = 0;
   
   uint8_t gui_redraw = 0; // don't need to redraw entire gui in every iteration, just numbers
@@ -320,6 +322,8 @@ void osTaskDisplay(void *argument){
     }else{
       osDelay(200 - (osKernelGetTickCount() - osTaskPreviousWoken));
     }
+    // uxHighWaterMark = uxTaskGetStackHighWaterMark(NULL);
+    // (void)uxHighWaterMark;
   }
 }
 

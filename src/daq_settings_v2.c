@@ -32,10 +32,14 @@ setV2param_t* daq_setV2_table[SETV2_NUM_PARAMETERS] = {
 };
 
 void daq_setV2_init(void){
-    split_float(param_k_t1.value, &param_k_t1.value_int, &param_k_t1.value_frac, 10);
-    split_float(param_k_t2.value, &param_k_t2.value_int, &param_k_t2.value_frac, 10);
-    split_float(param_k_f.value, &param_k_f.value_int, &param_k_f.value_frac, 10);
-    split_float(param_dummy.value, &param_dummy.value_int, &param_dummy.value_frac, 10);
+    // split_float(param_k_t1.value, &param_k_t1.value_int, &param_k_t1.value_frac, 10);
+    // split_float(param_k_t2.value, &param_k_t2.value_int, &param_k_t2.value_frac, 10);
+    // split_float(param_k_f.value, &param_k_f.value_int, &param_k_f.value_frac, 10);
+    // split_float(param_dummy.value, &param_dummy.value_int, &param_dummy.value_frac, 10);
+
+    for(uint8_t i = 0; i < SETV2_NUM_PARAMETERS; i++){
+        split_float(daq_setV2_table[i]->value, &daq_setV2_table[i]->value_int, &daq_setV2_table[i]->value_frac, 10);
+    }
 }
 
 const char* daq_setV2_get_param_name(uint8_t id){
